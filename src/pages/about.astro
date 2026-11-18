@@ -4,10 +4,13 @@ import { Image } from 'astro:assets';
 import profile from '../assets/profile_0.jpg';
 ---
 <Layout title="About">
-  <h1>About</h1>
-
   <div class="about">
     <div class="text">
+      <div class="identity">
+        <p>홍서연, Cyan Hong (b. 1992)</p>
+        <p><a href="mailto:hongsy@yonsei.ac.kr">hongsy@yonsei.ac.kr</a></p>
+      </div>
+
       <div class="lang" lang="ko">
         <p>
           미디어 아티스트 Cyan Hong(홍서연)은 현실의 행동과 상황이 가진 규칙에 주목하고, 이를 디지털 환경이나 특정한 세계관의 규칙으로 옮겨 시뮬레이션하는 구조를 설계한다. 시골과 도시, 섬을 오가며 삶의 터전과 주변 사람들이 여러 번 바뀌었던 그는, 그 사이에도 언제든 다시 접속할 수 있었던 가상공간을 탐험하며 디지털 매체에서 마주치는 존재와 시스템, 그것들과 주고받는 반응에 관심을 갖게 되었다. 그 과정에서 그 공간들 자체에 향수를 느끼게 되었고, 현실의 경험과 화면 속 경험은 그의 감각 안에 뒤섞여 남아 있다.
@@ -41,8 +44,21 @@ import profile from '../assets/profile_0.jpg';
   }
 
   .text p {
+    font-size: 14px;
     line-height: 1.8;
     margin: 0;
+  }
+
+  .identity {
+    margin-bottom: 32px;
+  }
+
+  .identity p {
+    line-height: 1.5;
+  }
+
+  .lang p {
+    color: #666;
   }
 
   .lang p + p {

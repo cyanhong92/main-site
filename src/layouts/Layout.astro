@@ -1,6 +1,12 @@
 ---
 import '../styles/global.css';
 const { title } = Astro.props;
+const path = Astro.url.pathname;
+const menu = [
+  { href: '/about', label: 'About' },
+  { href: '/cv', label: 'CV' },
+  { href: '/projects', label: 'Projects' },
+];
 ---
 <html lang="ko">
   <head>
@@ -12,11 +18,13 @@ const { title } = Astro.props;
     <aside class="sidebar">
       <a href="/" class="name">Cyan Hong</a>
       <nav>
-        <a href="/about">About</a>
-        <a href="/cv">CV</a>
-        <a href="/projects">Projects</a>
+        {menu.map((item) => (
+          <a href={item.href} class:list={[{ active: path.startsWith(item.href) }]}>
+            {item.label}
+          </a>
+        ))}
       </nav>
-      <footer class="copyright">© {new Date().getFullYear()} Seoyeon Hong</footer>
+      <footer class="copyright">© {new Date().getFullYear()} Cyan Hong</footer>
     </aside>
     <main class="content">
       <slot />
@@ -35,11 +43,20 @@ const { title } = Astro.props;
     position: sticky;
     top: 0;
     height: 100vh;
-    padding: 32px 24px;
-    border-right: 1px solid #ddd;
+    padding: 22px 24px 16px;
     display: flex;
     flex-direction: column;
     gap: 32px;
+  }
+
+  .sidebar::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    right: 0;
+    width: 1px;
+    background: #ddd;
   }
 
   .sidebar nav {
@@ -48,8 +65,19 @@ const { title } = Astro.props;
     gap: 12px;
   }
 
+  .sidebar nav a {
+    width: fit-content;
+    padding: 4px 10px;
+    margin-left: -10px;
+    border-radius: 999px;
+  }
+
+  .sidebar nav a.active {
+    background: #7fffff;
+  }
+
   .content {
-    padding: 32px;
+    padding: 32px 32px 32px;
   }
 
   .content > :global(:first-child) {
@@ -63,8 +91,7 @@ const { title } = Astro.props;
   }
 
   .name {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 22px;
   }
 
   @media (max-width: 720px) {
@@ -77,11 +104,17 @@ const { title } = Astro.props;
       top: 0;
       z-index: 10;
       height: auto;
-      padding: 16px 20px;
-      gap: 12px;
-      border-right: none;
-      border-bottom: 1px solid #ddd;
+      padding: 16px 20px 8px;
+      gap: 18px;
       background: #fff;
+    }
+    .sidebar::after {
+      top: auto;
+      bottom: 0;
+      left: 10px;
+      right: 10px;
+      width: auto;
+      height: 1px;
     }
     .sidebar nav {
       flex-direction: row;
@@ -96,7 +129,15 @@ const { title } = Astro.props;
       margin-top: 0;
       padding: 8px 20px;
       background: #fff;
-      border-top: 1px solid #ddd;
+    }
+    .copyright::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10px;
+      right: 10px;
+      height: 1px;
+      background: #ddd;
     }
     .content {
       padding: 20px 20px 56px;

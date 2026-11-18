@@ -1,14 +1,19 @@
 ---
 import '../styles/global.css';
-const { title } = Astro.props;
+const { title, lang = 'ko' } = Astro.props;
 const path = Astro.url.pathname;
+const prefix = lang === 'en' ? '/en' : '';
+// 언어 전환 버튼이 갈 주소: 같은 페이지의 다른 언어 버전
+const altPath = lang === 'en'
+  ? (path.replace(/^\/en/, '') || '/')
+  : '/en' + path;
 const menu = [
   { href: '/about', label: 'About' },
   { href: '/cv', label: 'CV' },
   { href: '/projects', label: 'Projects' },
 ];
 ---
-<html lang="ko">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -19,10 +24,15 @@ const menu = [
   </head>
   <body>
     <aside class="sidebar">
-      <a href="/" class="name">Cyan Hong</a>
+      <div class="top">
+        <a href={prefix + '/'} class="name">{lang === 'en' ? 'Cyan Hong' : '홍서연'}</a>
+        {lang === 'en'
+          ? <a href={altPath} class="lang-toggle to-kr" hreflang="ko">KR</a>
+          : <a href={altPath} class="lang-toggle to-en" hreflang="en">EN</a>}
+      </div>
       <nav>
         {menu.map((item) => (
-          <a href={item.href} class:list={[{ active: path.startsWith(item.href) }]}>
+          <a href={prefix + item.href} class:list={[{ active: path.startsWith(prefix + item.href) }]}>
             {item.label}
           </a>
         ))}
@@ -38,7 +48,7 @@ const menu = [
 <style>
   body {
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 220px 1fr;
     min-height: 100vh;
   }
 
@@ -76,7 +86,7 @@ const menu = [
   }
 
   .sidebar nav a.active {
-    background: #7fffff;
+    background: radial-gradient(50% 50% at 50% 50%, #f2a1ff 0%, #f2a1ff 20%, #00ffff 90%);
   }
 
   .content {
@@ -93,8 +103,43 @@ const menu = [
     color: #888;
   }
 
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .lang-toggle {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    line-height: 1;
+    border: 1px solid #111;
+    border-radius: 50%;
+  }
+
+  .lang-toggle.to-en,
+  .lang-toggle.to-en:hover {
+    background: #111;
+    color: #fff;
+  }
+
+  .lang-toggle.to-kr,
+  .lang-toggle.to-kr:hover {
+    background: #fff;
+    color: #111;
+  }
+
   .name {
+    white-space: nowrap;
     font-size: 22px;
+    margin-left: -2px;
+    line-height: 26px;
   }
 
   @media (max-width: 720px) {

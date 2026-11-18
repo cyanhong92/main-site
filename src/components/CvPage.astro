@@ -1,0 +1,147 @@
+---
+// CV 화면. 데이터는 src/data/cv.ko.js, cv.en.js
+const { data } = Astro.props;
+const sections = [
+  { title: data.titles.education, rows: data.education },
+  { title: data.titles.works, rows: data.works },
+  { title: data.titles.research, rows: data.research },
+  { title: data.titles.teaching, pinned: data.teachingPinned, rows: data.teaching },
+  { title: data.titles.production, pinned: data.productionPinned, rows: data.production, fold: true },
+];
+---
+{sections.map((s) => s.fold ? (
+    <section class="cv-section">
+      <h2>{s.title}</h2>
+      <details class="fold">
+        {s.pinned.map(([date, what, role, org]) => (
+          <summary class="row pinned">
+            <span class="date">{date}</span>
+            <span class="what"><span class="mark">{what}</span></span>
+            <span class="role">{role}</span>
+            <span class="org">{org}</span>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+        ))}
+        <ul class="rows">
+          {s.rows.map(([date, what, role, org]) => (
+            <li class="row">
+              <span class="date">{date}</span>
+              <span class="what">{what}</span>
+              <span class="role">{role}</span>
+              <span class="org">{org}</span>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </section>
+  ) : (
+    <section class="cv-section">
+      <h2>{s.title}</h2>
+      <ul class="rows">
+        {(s.pinned ?? []).map(([date, what, role, org]) => (
+          <li class="row pinned">
+            <span class="date">{date}</span>
+            <span class="what"><span class="mark">{what}</span></span>
+            <span class="role">{role}</span>
+            <span class="org">{org}</span>
+          </li>
+        ))}
+        {s.rows.map(([date, what, role, org]) => (
+          <li class="row">
+            <span class="date">{date}</span>
+            <span class="what">{what}</span>
+            <span class="role">{role}</span>
+            <span class="org">{org}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+<style>
+  .cv-section {
+    max-width: 1100px;
+  }
+
+  .cv-section + .cv-section {
+    margin-top: 48px;
+  }
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: #888;
+  }
+
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr) 180px 200px;
+    gap: 16px;
+    padding: 8px 0;
+    border-top: 1px solid #eee;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .date,
+  .org {
+    color: #888;
+  }
+
+  .fold summary {
+    position: relative;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .fold summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toggle {
+    position: absolute;
+    top: 8px;
+    right: 0;
+    color: #888;
+  }
+
+  .toggle::before {
+    content: '+';
+  }
+
+  .fold[open] .toggle::before {
+    content: '−';
+  }
+
+  .mark {
+    display: inline-block;
+    padding: 0 8px;
+    margin-left: -8px;
+    border-radius: 999px;
+    background: #ededed;
+  }
+
+  @media (max-width: 720px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 2px;
+      padding: 10px 0;
+    }
+
+    .role:empty,
+    .org:empty {
+      display: none;
+    }
+
+    .role,
+    .org {
+      font-size: 13px;
+    }
+  }
+</style>

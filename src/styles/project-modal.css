@@ -1,0 +1,57 @@
+/* 모바일 작품 팝업
+   - 목록 페이지(ProjectsPage): 카드를 누르면 같은 페이지 위에 열림
+   - 상세 페이지(ProjectDetail): 주소로 바로 들어온 경우 같은 모양으로 보임
+   두 곳이 이 파일 하나를 같이 써서 모양이 항상 같음 */
+
+/* 웹에서는 숨김 */
+.pm-overlay[hidden],
+.pm-backdrop,
+.pm-close {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  /* 팝업 층 전체가 스크롤됨
+     글이 길면 처음엔 팝업이 화면 아래를 덮고, 끝까지 내리면 아래 배경이 드러남 */
+  .pm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    padding: var(--modal-py) var(--modal-px);
+    overflow-y: auto;
+  }
+
+  /* 뒤 배경: 스크롤과 상관없이 화면에 고정 */
+  .pm-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: var(--c-dim);
+  }
+
+  .pm-panel {
+    position: relative;
+    background: #fff;
+    padding: 52px 20px 24px;
+    /* 글이 짧아도 화면 아래 배경 여백 위까지는 내려옴 */
+    min-height: calc(100vh - 2 * var(--modal-py));
+    min-height: calc(100dvh - 2 * var(--modal-py));
+  }
+
+  /* ×: 화면에 고정, 팝업 오른쪽 위 모서리에서 12px 안쪽
+     흰 배경은 스크롤 중 사진 위로 지나갈 때 ×가 묻히지 않게 하는 용도 */
+  .pm-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: calc(var(--modal-py) + 12px);
+    right: calc(var(--modal-px) + 12px);
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--c-text);
+  }
+}

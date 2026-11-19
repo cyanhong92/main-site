@@ -10,7 +10,7 @@ const prefix = lang === 'en' ? '/en' : '';
     {p.cover && <Image src={p.cover} alt={p.title} width={800} />}
   </div>
   <p class="title"><span>{p.title}</span></p>
-  <p class="year">{p.year}</p>
+  <p class="year">{p.meta}</p>
 </a>
 
 <style>
@@ -19,8 +19,8 @@ const prefix = lang === 'en' ? '/en' : '';
   }
 
   .thumb {
-    aspect-ratio: 4 / 3;
-    background: #f2f2f2;
+    aspect-ratio: 16 / 9;
+    background: var(--c-placeholder);
     overflow: hidden;
   }
 
@@ -42,7 +42,7 @@ const prefix = lang === 'en' ? '/en' : '';
   }
 
   .year {
-    color: #888;
+    color: var(--c-muted);
   }
 
   /* 지금 보고 있는 작품: 회색 라운드 박스 (CV 고정 항목과 같은 색) */
@@ -50,6 +50,6 @@ const prefix = lang === 'en' ? '/en' : '';
     padding: 2px 8px;
     margin-left: -8px;
     border-radius: 999px;
-    background: #ededed;
+    background: var(--c-fill);
   }
 </style>

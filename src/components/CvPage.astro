@@ -71,7 +71,7 @@ const sections = [
     margin: 0 0 12px;
     font-size: 14px;
     line-height: 20px; /* 줄 높이를 고정해 About 첫 줄과 윗선을 맞춤 (기본값이면 한글 폰트마다 높이가 달라짐) */
-    color: #888;
+    color: var(--c-muted);
   }
 
   .rows {
@@ -85,7 +85,7 @@ const sections = [
     grid-template-columns: 140px minmax(0, 1fr) 180px 200px;
     gap: 16px;
     padding: 8px 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--c-line-soft);
     font-size: 14px;
     line-height: 1.6;
     align-items: baseline; /* 크기가 다른 날짜와 내용의 글자 밑선을 맞춤 */
@@ -93,7 +93,7 @@ const sections = [
 
   .date,
   .org {
-    color: #888;
+    color: var(--c-muted);
   }
 
   /* 검정 본문(내용)은 15px, 줄 간격 1.4 */
@@ -125,7 +125,7 @@ const sections = [
     position: absolute;
     top: 8px;
     right: 0;
-    color: #888;
+    color: var(--c-muted);
   }
 
   .toggle::before {
@@ -141,7 +141,7 @@ const sections = [
     padding: 0 8px;
     margin-left: -8px;
     border-radius: 999px;
-    background: #ededed;
+    background: var(--c-fill);
   }
 
   @media (max-width: 720px) {

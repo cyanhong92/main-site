@@ -68,11 +68,16 @@ const { lang = 'ko' } = Astro.props;
     </div>
   </div>
 
-  <Image src={profile} alt="Cyan Hong" class="photo" width={700} />
+  <Image src={profile} alt={lang === 'en' ? 'Cyan Hong' : '홍서연'} class="photo" width={700} />
 </div>
 
 <style>
+  /* 이 화면에서만 쓰는 값 */
   .about {
+    --text-size: 15px; /* 이름·소개 글·메일 글자 크기 */
+    --name-lh: 1.5;    /* 이름 줄 줄간격 */
+    --name-gap: 29px;  /* 이름 줄 아래 여백 */
+
     display: grid;
     grid-template-columns: minmax(0, 1fr) 320px;
     gap: 48px;
@@ -81,21 +86,21 @@ const { lang = 'ko' } = Astro.props;
   }
 
   .text p {
-    font-size: 15px;
+    font-size: var(--text-size);
     line-height: 1.4;
     margin: 0;
   }
 
   .identity {
-    margin-bottom: 29px;
+    margin-bottom: var(--name-gap);
   }
 
   .identity p {
-    line-height: 1.5;
+    line-height: var(--name-lh);
   }
 
   .lang p {
-    color: #666;
+    color: var(--c-body);
   }
 
   .lang p + p {
@@ -118,8 +123,8 @@ const { lang = 'ko' } = Astro.props;
     width: 100%;
     height: auto;
     /* 웹: 사진 윗선을 회색 소개 글 첫 줄에 맞춤
-       = 이름 줄 높이(15px × 1.5) + 이름 아래 여백(29px) + 첫 줄 글자 위 여백(약 3px) */
-    margin-top: calc(15px * 1.5 + 29px + 3px);
+       = 이름 줄 높이 + 이름 아래 여백 + 첫 줄 글자 위 여백(약 3px) */
+    margin-top: calc(var(--text-size) * var(--name-lh) + var(--name-gap) + 3px);
   }
 
   @media (max-width: 720px) {

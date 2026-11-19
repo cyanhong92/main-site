@@ -11,8 +11,11 @@ const projects = defineCollection({
       title: z.string(),
       // 아래 항목은 ko.md에만 쓰면 됨 (en.md는 title만)
       year: z.coerce.string().optional(),
-      cover: image().optional(), // 카드·상세 대표 이미지 (4:3으로 잘려 보임)
-      order: z.number().optional(), // 같은 해 안에서 순서를 정하고 싶을 때 (작을수록 앞)
+      // 분류: work(작업) · collaboration(협업) · research(연구) · teaching(교육)
+      category: z.enum(['work', 'collaboration', 'research', 'teaching']).optional(),
+      cover: image().optional(), // 카드(16:9로 잘림)·상세 대표 이미지
+      coverMotion: image().optional(), // 상세 페이지에서만 커버 대신 보여줄 움직이는 이미지 (gif)
+      order: z.number().optional(), // 같은 해 안에서 순서 (작을수록 앞)
       draft: z.boolean().optional(), // true면 사이트에 안 보임
     }),
 });

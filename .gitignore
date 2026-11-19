@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# 원본 사진·영상 보관 (사이트에 안 올라감)
+_originals/

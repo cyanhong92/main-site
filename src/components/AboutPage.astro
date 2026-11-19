@@ -81,13 +81,13 @@ const { lang = 'ko' } = Astro.props;
   }
 
   .text p {
-    font-size: 14px;
-    line-height: 1.8;
+    font-size: 15px;
+    line-height: 1.4;
     margin: 0;
   }
 
   .identity {
-    margin-bottom: 32px;
+    margin-bottom: 29px;
   }
 
   .identity p {
@@ -99,7 +99,7 @@ const { lang = 'ko' } = Astro.props;
   }
 
   .lang p + p {
-    margin-top: 1em;
+    margin-top: 24px; /* 문단 사이 간격 */
   }
 
   .lang + .lang {
@@ -110,12 +110,22 @@ const { lang = 'ko' } = Astro.props;
     margin-top: 32px;
   }
 
+  .contact a {
+    font-style: italic;
+  }
+
   .photo {
     width: 100%;
     height: auto;
+    /* 웹: 사진 윗선을 회색 소개 글 첫 줄에 맞춤
+       = 이름 줄 높이(15px × 1.5) + 이름 아래 여백(29px) + 첫 줄 글자 위 여백(약 3px) */
+    margin-top: calc(15px * 1.5 + 29px + 3px);
   }
 
   @media (max-width: 720px) {
+    .photo {
+      margin-top: 0;
+    }
     .about {
       grid-template-columns: 1fr;
       gap: 32px;

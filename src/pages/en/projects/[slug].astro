@@ -1,0 +1,16 @@
+---
+// 프로젝트마다 /en/projects/<slug> 페이지를 하나씩 만듦
+import Layout from '../../../layouts/Layout.astro';
+import ProjectDetail from '../../../components/ProjectDetail.astro';
+import { getProjects } from '../../../lib/projects.js';
+
+export async function getStaticPaths() {
+  const projects = await getProjects('en');
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+
+const { p } = Astro.props;
+---
+<Layout title={p.title} lang="en">
+  <ProjectDetail p={p} lang="en" />
+</Layout>

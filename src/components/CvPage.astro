@@ -69,7 +69,8 @@ const sections = [
 
   h2 {
     margin: 0 0 12px;
-    font-size: 15px;
+    font-size: 14px;
+    line-height: 20px; /* 줄 높이를 고정해 About 첫 줄과 윗선을 맞춤 (기본값이면 한글 폰트마다 높이가 달라짐) */
     color: #888;
   }
 
@@ -87,11 +88,27 @@ const sections = [
     border-top: 1px solid #eee;
     font-size: 14px;
     line-height: 1.6;
+    align-items: baseline; /* 크기가 다른 날짜와 내용의 글자 밑선을 맞춤 */
   }
 
   .date,
   .org {
     color: #888;
+  }
+
+  /* 검정 본문(내용)은 15px, 줄 간격 1.4 */
+  .what {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .role {
+    font-style: italic;
+  }
+
+  /* 날짜는 본문보다 2px 작게 */
+  .date {
+    font-size: 12px;
   }
 
   .fold summary {
@@ -142,6 +159,10 @@ const sections = [
     .role,
     .org {
       font-size: 13px;
+    }
+
+    .role {
+      text-align: right;
     }
   }
 </style>

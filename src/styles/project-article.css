@@ -1,0 +1,53 @@
+/* 프로젝트 상세 본문 (사진·제목·연도·설명)
+   상세 페이지(ProjectDetail)와 목록 페이지의 모바일 팝업(ProjectsPage)에서 같이 씀 */
+.project-article .hero {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #f2f2f2;
+  overflow: hidden;
+}
+
+.project-article .hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-article .title {
+  margin: 20px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.project-article .year {
+  margin: 0;
+  font-size: 14px;
+  color: #888;
+}
+
+.project-article .body {
+  margin-top: 24px;
+  max-width: 640px;
+}
+
+/* 마크다운 본문 */
+.project-article .body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #666;
+}
+
+.project-article .body p + p {
+  margin-top: 1em;
+}
+
+.project-article .body img {
+  margin: 24px 0;
+  width: 100%;
+  height: auto;
+}
+
+.project-article .body a {
+  text-decoration: underline;
+}

@@ -1,0 +1,186 @@
+---
+// Projects 목록 화면. lang="ko" 또는 "en"
+import ProjectCard from './ProjectCard.astro';
+import { getProjects } from '../lib/projects.js';
+import '../styles/project-article.css';
+const { lang = 'ko' } = Astro.props;
+const projects = await getProjects(lang);
+const listHref = `${lang === 'en' ? '/en' : ''}/projects`;
+---
+<div class="wrap">
+  <ul class="grid">
+    {projects.map((p) => (
+      <li class="cell"><ProjectCard p={p} lang={lang} /></li>
+    ))}
+  </ul>
+</div>
+
+<!-- 모바일 팝업: 카드를 누르면 페이지를 옮기지 않고 이 위에 상세 내용을 불러와 띄움 -->
+<div class="m-overlay" hidden>
+  <div class="m-backdrop"></div>
+  <a href={listHref} class="m-close" aria-label="Close"><svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 2 L12 12 M12 2 L2 12" /></svg></a>
+  <article class="m-detail project-article"></article>
+</div>
+
+<script>
+  const isMobile = () => matchMedia('(max-width: 720px)').matches;
+
+  // ---------- 모바일: 같은 페이지 위 팝업 ----------
+  const overlay = document.querySelector('.m-overlay');
+  const box = overlay.querySelector('.m-detail');
+  const listTitle = document.title;
+
+  async function openModal(href, push) {
+    const res = await fetch(href);
+    const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+    const article = doc.querySelector('.project-article');
+    if (!article) return (location.href = href); // 실패하면 그냥 상세 페이지로 이동
+    box.innerHTML = article.innerHTML;
+    overlay.hidden = false;
+    overlay.scrollTop = 0;
+    document.documentElement.style.overflow = 'hidden'; // 뒤 목록은 그 자리에 멈춤
+    document.title = doc.title;
+    if (push) history.pushState({ modal: href }, '', href); // 주소창도 작품 주소로
+  }
+
+  function closeModal() {
+    overlay.hidden = true;
+    box.innerHTML = '';
+    document.documentElement.style.overflow = '';
+    document.title = listTitle;
+  }
+
+  // ×·배경·Esc → 브라우저 뒤로가기와 같게 처리 (주소도 목록으로 돌아감)
+  overlay.querySelector('.m-close').addEventListener('click', (e) => {
+    e.preventDefault();
+    history.back();
+  });
+  overlay.querySelector('.m-backdrop').addEventListener('click', () => history.back());
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.hidden) history.back();
+  });
+  window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.modal) openModal(e.state.modal, false);
+    else if (!overlay.hidden) closeModal();
+  });
+
+  // ---------- 카드 클릭 ----------
+  document.querySelectorAll('.grid .card').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      const href = card.getAttribute('href');
+      if (isMobile()) {
+        e.preventDefault();
+        openModal(href, true);
+        return;
+      }
+      // 웹: 상세 페이지로 이동. 돌아올 때 보던 위치로 복원하도록 기억
+      sessionStorage.setItem('projectsList', JSON.stringify({
+        path: location.pathname,
+        y: window.scrollY,
+      }));
+    });
+  });
+
+  // 웹: 상세에서 '<'로 돌아온 경우 원래 위치로
+  const saved = JSON.parse(sessionStorage.getItem('projectsList') || 'null');
+  if (sessionStorage.getItem('projectsListRestore') && saved && saved.path === location.pathname) {
+    window.scrollTo(0, saved.y);
+  }
+  sessionStorage.removeItem('projectsListRestore');
+</script>
+
+<style>
+  /* 칸마다 오른쪽·아래 선을 긋고, 바깥쪽 선과 여백은 wrap 밖으로 밀어내 잘라냄
+     → 카드 사이에만 선이 남고, 이미지 가장자리는 본문 가장자리에 맞춰짐 */
+  .wrap {
+    overflow: hidden;
+    margin: 0 3px; /* 웹: 좌우 여백 3px씩 더 (상세 페이지와 같음) */
+    padding-top: 2px; /* 위에서 2px 내림 (상세 페이지와 같음) */
+  }
+
+  .grid {
+    list-style: none;
+    margin: -16px -17px -17px -16px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cell {
+    padding: 16px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* 마지막 카드 오른쪽은 늘 바깥이거나 빈 칸이라 선을 지움 */
+  .cell:last-child {
+    border-right-color: transparent;
+  }
+
+  /* 아주 넓은 화면: 4열 */
+  @media (min-width: 1600px) {
+    .grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* 좁은 노트북·태블릿: 2열 */
+  @media (max-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* 모바일 팝업 (모바일에서만 열림) */
+  .m-overlay[hidden] {
+    display: none;
+  }
+
+  .m-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    padding: 30px 18px; /* 위아래 30px, 양옆 18px */
+    overflow-y: auto; /* 팝업 전체가 스크롤: 긴 글은 끝까지 내리면 아래 배경이 드러남 */
+  }
+
+  .m-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(225, 225, 225, 0.8);
+  }
+
+  .m-detail {
+    position: relative;
+    background: #fff;
+    padding: 52px 20px 24px;
+    min-height: calc(100vh - 60px);
+    min-height: calc(100dvh - 60px); /* 글이 짧아도 화면 아래 30px 위까지 */
+  }
+
+  .m-close {
+    position: fixed;
+    top: 42px;
+    right: 30px;
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+  }
+
+  /* 모바일: 1장씩, 추가 여백 없음 */
+  @media (max-width: 720px) {
+    .wrap {
+      margin: 0;
+      padding-top: 0;
+    }
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

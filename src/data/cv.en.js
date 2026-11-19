@@ -16,8 +16,8 @@ export const works = [
 ];
 
 export const research = [
-  ['2026', 'Bodyfulness (CHI 2026, Co-author)', 'VR Direction, Production & Build', 'Seoul National University HCI'],
-  ['2025', 'AI Film <Wind, Dream>', 'AI Art Director', 'Jeju AI International Film Festival'],
+  ['2026', 'Bodyfulness VR (CHI 2026, Co-author)', 'VR Direction, Production & Build', 'Seoul National University HCI+D Lab'],
+  ['2025', 'AI Film <Wind, Dream> (Invited, Jeju AI Intl. Film Festival)', 'AI Art Director', 'K-Arts Art & Technology Lab (AT Lab)'],
   ['2023', 'Hyundai Motor Next Generation Vehicle NFT R&D', 'Researcher', 'Hyundai Design Center'],
   ['2022', 'Research Project <SWRW>', '', 'K-Arts Art Collider Lab'],
 ];

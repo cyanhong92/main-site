@@ -1,0 +1,232 @@
+---
+// 프로젝트 상세 화면
+// 웹: 왼쪽 2칸 너비에 내용, 오른쪽 1칸에 목록 (지금 작품이 보이게 스크롤)
+// 모바일: 목록 위에 배경 + 팝업, 오른쪽 위 X로 닫기
+//   (목록에서 카드를 누르면 ProjectsPage가 같은 페이지 위에 팝업을 띄움.
+//    이 페이지는 주소로 바로 들어온 경우에 보임)
+import { Image } from 'astro:assets';
+import ProjectCard from './ProjectCard.astro';
+import { render } from 'astro:content';
+import { getProjects } from '../lib/projects.js';
+import '../styles/project-article.css';
+const { p, lang = 'ko' } = Astro.props;
+const projects = await getProjects(lang);
+const { Content } = await render(p.entry); // 마크다운 본문
+const prefix = lang === 'en' ? '/en' : '';
+const listHref = `${prefix}/projects`;
+---
+<div class="detail-layout">
+  <div class="overlay">
+    <a href={listHref} class="backdrop" aria-label="Close"></a>
+    <a href={listHref} class="close icon-btn" aria-label="Close"><svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 2 L12 12 M12 2 L2 12" /></svg></a>
+    <a href={listHref} class="back" aria-label="Back"><svg viewBox="0 0 10 16" width="10" height="16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M8.5 1 L1.5 8 L8.5 15" /></svg></a>
+    <article class="detail project-article">
+      <div class="hero">
+        {p.cover && <Image src={p.cover} alt={p.title} width={1600} />}
+      </div>
+      <h1 class="title">{p.title}</h1>
+      <p class="year">{p.year}</p>
+      <div class="body">
+        <Content />
+      </div>
+    </article>
+  </div>
+
+  <aside class="side">
+    <ul class="list">
+      {projects.map((item) => (
+        <li class="cell">
+          <ProjectCard p={item} lang={lang} active={item.slug === p.slug} />
+        </li>
+      ))}
+    </ul>
+  </aside>
+</div>
+
+<script>
+  // 웹: 오른쪽 목록에서 지금 작품 카드가 가운데 보이도록 스크롤
+  const active = document.querySelector('.side .active');
+  const side = document.querySelector('.side');
+  if (active && side && !matchMedia('(max-width: 720px)').matches) {
+    side.scrollTop = active.parentElement.offsetTop - side.clientHeight / 2 + active.clientHeight / 2;
+  }
+
+  // 닫기·뒤로가기: 목록으로 돌아가면 원래 보던 위치로 복원하라고 표시 (ProjectsPage 참고)
+  const close = () => sessionStorage.setItem('projectsListRestore', '1');
+  document.querySelectorAll('.close, .back, .backdrop').forEach((el) => el.addEventListener('click', close));
+
+  // Esc로 닫기
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const btn = document.querySelector('.close');
+      if (btn) {
+        close();
+        location.href = btn.getAttribute('href');
+      }
+    }
+  });
+</script>
+
+<style>
+  /* ---------- 웹 ---------- */
+  /* 화면 높이에 딱 맞춤 (본문 위·아래 여백 25px + 32px 제외) → 페이지 전체 스크롤 없음
+     왼쪽 내용과 오른쪽 목록이 각자 스크롤 */
+  .detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    height: calc(100vh - 59px);
+    margin: 0 3px; /* 좌우 3px씩 더 (목록과 같음) */
+    position: relative;
+    top: 2px; /* 위에서 2px 내림 (첫 요소의 위쪽 margin은 Layout에서 0으로 지워져서 top 사용) */
+  }
+
+  .overlay {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 32px;
+    padding-bottom: 20px; /* 설명이 길어져도 맨 아래 여백 */
+    /* '<' 버튼이 잘리지 않게 왼쪽으로 22px 넓힘 */
+    margin-left: -22px;
+    padding-left: 22px;
+  }
+
+  /* 뒤로가기·닫기 버튼: 언어 버튼과 같은 1.25px 선 */
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.25px solid #111;
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+  }
+
+  /* 웹에서는 배경·닫기 버튼 숨김 (모바일에서만 보임) */
+  .backdrop,
+  .close {
+    display: none;
+  }
+
+  /* 웹: 사진 왼쪽 바깥, 사진 윗선에 맞춤. 스크롤해도 위에 고정 (sticky)
+     아래 margin을 높이만큼 빼서 아래 내용을 밀어내지 않음 */
+  .back {
+    position: sticky;
+    top: 1px;
+    z-index: 1;
+    display: block;
+    width: 10px;
+    height: 16px;
+    margin: 0 0 -16px -22px;
+    color: #111;
+  }
+
+  /* 웹: 스크롤은 되지만 스크롤바는 숨김 */
+  .overlay,
+  .side {
+    scrollbar-width: none;
+  }
+
+  .overlay::-webkit-scrollbar,
+  .side::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 오른쪽 목록: 따로 스크롤. 왼쪽 세로선은 그리드 선과 같은 색 */
+  .side {
+    height: 100%;
+    overflow-y: auto;
+    border-left: 1px solid #ddd;
+    /* 스크롤바를 카드에서 떼어 오른쪽 여백 쪽으로 */
+    margin-right: -24px;
+    padding-right: 24px;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 칸 사이 가로선이 세로선에 붙지 않도록 왼쪽을 띄움 (카드 왼쪽 끝과 맞춤) */
+  .cell {
+    margin-left: 21px;
+    padding: 0 0 16px;
+  }
+
+  .cell + .cell {
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+  }
+
+  /* ---------- 모바일 ---------- */
+  @media (max-width: 720px) {
+    .detail-layout {
+      display: block;
+      height: auto;
+      margin: 0;
+      top: 0;
+    }
+
+    /* 뒤에 깔린 목록 (1장씩) */
+    .side {
+      height: auto;
+      overflow: visible;
+      border-left: none;
+      margin-right: 0;
+      padding-right: 0;
+    }
+
+    .cell {
+      margin-left: 0;
+    }
+
+    /* 팝업: 어두운 층 전체가 스크롤됨
+       글이 길면 처음엔 팝업이 화면 아래를 덮고, 끝까지 내리면 아래 배경 30px이 드러남 */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      padding: 30px 18px; /* 위아래 30px, 양옆 18px */
+      margin-left: 0;
+      height: auto;
+      overflow-y: auto;
+      display: block;
+    }
+
+    /* 배경은 스크롤과 상관없이 화면에 고정 */
+    .backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(225, 225, 225, 0.8);
+    }
+
+    .detail {
+      position: relative;
+      background: #fff;
+      padding: 52px 20px 24px;
+      /* 글이 짧아도 화면 아래 30px 위까지는 내려옴 */
+      min-height: calc(100vh - 60px);
+      min-height: calc(100dvh - 60px);
+    }
+
+    .close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* 화면에 고정: 스크롤해도 팝업 오른쪽 위에 계속 보임 */
+      position: fixed;
+      top: 42px;
+      right: 30px;
+      z-index: 2;
+      border: none; /* 테두리 원 없이 X만 */
+    }
+
+    /* 모바일은 X로 닫으므로 뒤로가기 숨김 */
+    .back {
+      display: none;
+    }
+  }
+</style>

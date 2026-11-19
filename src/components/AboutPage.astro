@@ -10,7 +10,6 @@ const { lang = 'ko' } = Astro.props;
       {lang === 'en'
         ? <p>Cyan Hong (b. 1992)</p>
         : <p>홍서연 (b. 1992)</p>}
-      <p><a href="mailto:hongsy@yonsei.ac.kr">hongsy@yonsei.ac.kr</a></p>
     </div>
 
     {lang === 'en' ? (
@@ -19,17 +18,17 @@ const { lang = 'ko' } = Astro.props;
             Media artist Cyan Hong looks at the rules embedded in real-world actions and situations,
             and designs structures that translate them into the rules of digital environments or particular fictional worlds and simulate them. 
             Having moved between the countryside, cities, and an island, with home and community changing many times, 
-            Cyan explored virtual spaces that remained accessible throughout, and grew interested in the beings and systems encountered across digital media and the exchanges they invite. 
-            Over time, those spaces themselves became objects of nostalgia, and experiences from the physical world and from the screen remain intertwined in Cyan's senses.
+            Hong explored virtual spaces that remained accessible throughout, and grew interested in the beings and systems encountered across digital media and the exchanges they invite. 
+            Over time, those spaces themselves became objects of nostalgia, and experiences from the physical world and from the screen remain intertwined in Hong's senses.
           </p>
           <p>
             Everyday sensations such as breathing, gazing, and contemplation become the rules of interfaces and interactions, 
             within which audiences move and form relationships with virtual worlds. 
             For things that have lost their place in reality, such as isolated individuals, fading rituals, and the margins of the city, 
-            Cyan creates virtual places and devices. 
+            Hong creates virtual places and devices. 
             The worlds Hong builds are closer to alternative worlds that hold what reality has failed to provide. 
             Regarding digital space as existing on the same plane as physical space, 
-            Cyan unfolds the emotions that arise there through VR, video, installation, and the web.
+            Hong unfolds the emotions that arise there through VR, video, installation, and the web.
           </p>
         </div>
     ) : (
@@ -48,6 +47,9 @@ const { lang = 'ko' } = Astro.props;
           </p>
         </div>
     )}
+    <div class="contact">
+    <p><a href="mailto:hongsy@yonsei.ac.kr">hongsy@yonsei.ac.kr</a></p>
+    </div>
   </div>
 
   <Image src={profile} alt="Cyan Hong" class="photo" width={700} />
@@ -86,6 +88,10 @@ const { lang = 'ko' } = Astro.props;
 
   .lang + .lang {
     margin-top: 40px;
+  }
+
+  .contact {
+    margin-top: 32px;
   }
 
   .photo {

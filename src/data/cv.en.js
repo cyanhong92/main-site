@@ -11,7 +11,7 @@ export const works = [
   ['2025', 'VR work <If Facing Object (little) a>, Exhibition', '', 'Gwangyang International Media Art Festival (GIMAF)'],
   ['2024', '<The Underland>, Screening, New Choice, The 50th Seoul Independent Film Festival (SIFF2024)', '', 'Seoul Independent Film Festival'],
   ['2024', '<Pavilion of Sun>, Exhibition, LG Arts Center Media Art Open Call for Emerging Artists', '', 'LG Arts Center'],
-  ['2023', '<On the Rails>, Group Exhibition ≪The Willingness to be Banished≫', '', 'Seongbuk Cultural Foundation'],
+  ['2023', '<On the Rails>, Group Exhibition ≪The Willingness to Be Banished≫', '', 'Seongbuk Cultural Foundation'],
   ['2020', '<Looping Shell>, Screening, BIAF 2020 11-Second Film Festival', '', 'Bucheon International Animation Festival'],
 ];
 
@@ -19,7 +19,7 @@ export const research = [
   ['2026', 'Bodyfulness (CHI 2026, Co-author)', 'VR Direction, Production & Build', 'Seoul National University HCI'],
   ['2025', 'AI Film <Wind, Dream>', 'AI Art Director', 'Jeju AI International Film Festival'],
   ['2023', 'Hyundai Motor Next Generation Vehicle NFT R&D', 'Researcher', 'Hyundai Design Center'],
-  ['2022', 'Research Project <SWRW>', '', 'K-Arts AC Lab'],
+  ['2022', 'Research Project <SWRW>', '', 'K-Arts Art Collider Lab'],
 ];
 
 export const teachingPinned = [
@@ -33,7 +33,7 @@ export const teaching = [
   ['2025', "Workshop 'Baeker: A Learning Community' #3, #4, #5", 'Facilitator, Tech Advisor', 'Rigidbody, Arts Korea Lab'],
   ['2025', 'Upscaling Seongnam Community 2025', 'Tech Mentor', 'Seongnam Cultural Foundation'],
   ['2024', "Workshop 'The Future of Community'", 'Instructor', "Gyeonggi Children's Museum"],
-  ['2024', 'LG Convergence Arts Gifted Program', 'Mentor', 'LG Foundation, Korea Mecenat Association'],
+  ['2024', 'LG Convergence Arts Gifted Program', 'Mentor', 'LG Yonam Culture Foundation, Korea Mecenat Association'],
   ['2023', 'KF XR Gallery - VR Sculpture Workshop', 'Instructor', 'Korea Foundation'],
   ['2019', 'Student Growth Program - Video Editing', 'Instructor', 'Mapo Education Welfare Center'],
 ];
@@ -50,14 +50,14 @@ export const production = [
   ['2024', 'CLOUD ZERO', '3D Graphics', 'Shoemarker'],
   ['2024', 'HYBRID 28, HIDDEN PILLOW', '3D Graphics', 'Sono Square Sono Season'],
   ['2023', '<Jaeraeak I: Jongmyo>', 'Video Director', 'Soorim Cultural Foundation'],
-  ['2023', 'Nalssi <Extinct Animal Cooperative>', '3D CG', 'Korea Culture and Arts Foundation'],
-  ['2023', 'Research Project <Still Life Garden>', '3D, Art', 'Nanji Art Studio'],
-  ['2022', 'Dew Kim <The Last Scene>', '3D, AR, Art', 'Arts Council Korea'],
+  ['2023', 'Nalssi <Extinct Animal Cooperative>', '3D CG', 'Arts Council Korea (ARKO)'],
+  ['2023', 'Research Project <Still Life Garden>', '3D, Art', 'SeMA Nanji Residency'],
+  ['2022', 'Dew Kim <The Last Scene>', '3D, AR, Art', 'Arts Council Korea (ARKO)'],
   ['2022', 'Sanghee <One-room Babel>', '3D Animation', 'Venice Biennale'],
   ['2022', '2023 FW Kids Content', 'Motion Graphics', 'FILA Korea'],
   ['2022', "'Dokju'", 'Animation', "Maker's Mark Korea"],
   ['2022', 'Overseas Promotional Video', 'CG', 'Korean Culture and Information Service'],
-  ['2022', "Tei '7 Years', Kooggi 'ALONE', etc.", 'CG', 'Ent'],
+  ['2022', "Tei '7 Years', Coogie 'ALONE', etc.", 'CG', 'Ent'],
   ['2022', "Lim Kim 'Falling'", '3D Promotional Video', 'Kolon Industries'],
   ['2022', 'Opera Gala', 'Promotional Video', 'Seoul Metropolitan Opera'],
   ['2022', 'Baritone Ko Sung-hyun', 'NFT Design, Motion Graphics', 'Artel'],
@@ -69,7 +69,7 @@ export const production = [
   ['2021', "'Recipe'", 'Animation', "Maker's Mark Korea"],
   ['2021', 'Incheon Port Landmark', 'Moving Illustration', 'Incheon Port Authority'],
   ['2021', 'NFT Project', '3D Motion, Directing', 'Dunamjae Art Center'],
-  ['2021', 'Korean Intl. Ceramic Biennale Intl. Competition', 'Moving Poster', 'Korea Ceramic Foundation'],
+  ['2021', 'GICB International Competition', 'Moving Poster', 'Korea Ceramic Foundation'],
   ['2021', 'Financial Education Kit', 'Project Manager', 'Hyundai Card'],
   ['2021', '2021, 100 FILM 100 POSTER', 'Poster Design', 'Jeonju International Film Festival'],
   ['2021', 'Sejong Spring', 'Motion Graphics', 'Sejong Center for the Performing Arts'],

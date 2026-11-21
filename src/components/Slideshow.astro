@@ -1,0 +1,114 @@
+---
+// 메인: 프로젝트 사진을 무작위 순서로 화면 가득 보여주고 페이드로 넘김
+// 따로 관리할 목록 없음. 각 프로젝트 폴더의 사진(jpg·png·webp)을 빌드할 때마다 모음
+// 파일 이름이 _로 시작하면 제외
+import { getImage } from 'astro:assets';
+import ProjectModal from './ProjectModal.astro';
+import { getProjects } from '../lib/projects.js';
+
+const { lang = 'ko' } = Astro.props;
+const prefix = lang === 'en' ? '/en' : '';
+const projects = await getProjects(lang);
+const files = import.meta.glob('../content/projects/*/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
+
+const slides = [];
+for (const p of projects) {
+  for (const [path, src] of Object.entries(files)) {
+    const [slug, name] = path.split('/').slice(-2);
+    if (slug !== p.slug || name.startsWith('_')) continue;
+    const img = await getImage({ src, width: 1920, format: 'webp' });
+    slides.push({ src: img.src, href: `${prefix}/projects/${p.slug}`, title: p.title });
+  }
+}
+---
+<a class="slideshow" href={prefix || '/'} data-slideshow data-slides={JSON.stringify(slides)} aria-label="">
+  <img class="layer" alt="" />
+  <img class="layer" alt="" />
+</a>
+
+<!-- 모바일: 사진을 누르면 메인 위에 작품 팝업 -->
+<ProjectModal closeHref={prefix || '/'} />
+
+<script>
+  import { setupProjectModal } from '../lib/project-modal.js';
+
+  const INTERVAL = 5000; // 사진 하나가 머무는 시간 (ms)
+
+  const box = document.querySelector('[data-slideshow]');
+  const slides = JSON.parse(box.dataset.slides)
+    .map((v) => [Math.random(), v])
+    .sort((a, b) => a[0] - b[0])
+    .map((v) => v[1]);
+  const layers = [...box.querySelectorAll('.layer')];
+  let i = 0;
+  let front = 0;
+
+  function show(slide) {
+    const next = layers[1 - front];
+    const reveal = () => {
+      next.classList.add('on');
+      layers[front].classList.remove('on');
+      front = 1 - front;
+      box.href = slide.href;
+      box.setAttribute('aria-label', slide.title);
+    };
+    next.onload = reveal;
+    next.alt = slide.title;
+    next.src = slide.src;
+    if (next.complete) reveal();
+  }
+
+  function preload(slide) {
+    if (slide) new Image().src = slide.src; // 다음 사진을 미리 받아둠
+  }
+
+  show(slides[0]);
+  preload(slides[1]);
+  setInterval(() => {
+    i = (i + 1) % slides.length;
+    show(slides[i]);
+    preload(slides[(i + 1) % slides.length]);
+  }, INTERVAL);
+
+  setupProjectModal([box]);
+</script>
+
+<style>
+  /* 본문 여백을 넘어 오른쪽 영역 전체를 채움 */
+  .slideshow {
+    position: relative;
+    display: block;
+    margin: calc(-1 * var(--content-pt)) calc(-1 * var(--content-px)) calc(-1 * var(--content-pb));
+    margin-top: calc(-1 * var(--content-pt)) !important; /* Layout이 첫 요소의 위 여백을 0으로 만드는 걸 덮어씀 */
+    height: 100vh;
+    overflow: hidden;
+    background: var(--c-placeholder);
+  }
+
+  .layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  }
+
+  .layer.on {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .layer {
+      transition: none;
+    }
+  }
+
+  /* 모바일: 위쪽 이름·메뉴 아래 남은 화면을 채움 */
+  @media (max-width: 720px) {
+    .slideshow {
+      height: calc(100svh - 96px); /* 96px: 모바일 이름·메뉴 영역 높이 */
+    }
+  }
+</style>

@@ -14,11 +14,18 @@ function tilt(slug) {
   for (const ch of slug) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   return ((h % 61) / 10 - 3).toFixed(1);
 }
+
+// 기울인 썸네일이 칸 밖으로 나가 잘리지 않도록 살짝 줄이는 비율 (기울기가 클수록 조금 더 작게)
+// 16:9 사진을 각도 a만큼 돌렸을 때 가로 폭이 원래 폭 안에 들어가는 비율
+function fit(deg) {
+  const a = (Math.abs(deg) * Math.PI) / 180;
+  return (1 / (Math.cos(a) + (9 / 16) * Math.sin(a))).toFixed(3);
+}
 ---
 <div class="wrap">
   <ul class="grid">
     {projects.map((p) => (
-      <li class="cell" style={`--tilt: ${tilt(p.slug)}deg`}><ProjectCard p={p} lang={lang} /></li>
+      <li class="cell" style={`--tilt: ${tilt(p.slug)}deg; --fit: ${fit(tilt(p.slug))}`}><ProjectCard p={p} lang={lang} /></li>
     ))}
   </ul>
 </div>
@@ -58,7 +65,8 @@ function tilt(slug) {
   .wrap {
     overflow: hidden;
     margin: 0 var(--projects-inset);
-    padding-top: var(--projects-nudge);
+    /* + 8px: 첫 줄 썸네일의 기울어진 위쪽 모서리가 잘리지 않게 */
+    padding-top: calc(var(--projects-nudge) + 8px);
   }
 
   .grid {
@@ -78,7 +86,7 @@ function tilt(slug) {
 
   /* 썸네일 기울기 (값은 위의 tilt()가 작품마다 정함) */
   .grid :global(.thumb) {
-    transform: rotate(var(--tilt, 0deg));
+    transform: rotate(var(--tilt, 0deg)) scale(var(--fit, 1));
   }
 
   /* 마지막 카드 오른쪽은 늘 바깥이거나 빈 칸이라 선을 지움 */
@@ -104,7 +112,7 @@ function tilt(slug) {
   @media (max-width: 720px) {
     .wrap {
       margin: 0;
-      padding-top: 0;
+      padding-top: 8px;
     }
     .grid {
       grid-template-columns: 1fr;

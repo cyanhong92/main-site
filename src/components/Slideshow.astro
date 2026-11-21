@@ -45,17 +45,25 @@ for (const p of projects) {
 
   function show(slide) {
     const next = layers[1 - front];
+    const prev = layers[front];
+    let done = false;
     const reveal = () => {
+      if (done) return; // load와 complete가 둘 다 불려도 한 번만
+      done = true;
+      // 새 사진을 위에 올려 서서히 나타나게 하고, 다 나타난 뒤 아래 사진을 치움
+      next.style.zIndex = 2;
+      prev.style.zIndex = 1;
       next.classList.add('on');
-      layers[front].classList.remove('on');
+      setTimeout(() => prev.classList.remove('on'), 1600);
       front = 1 - front;
       box.href = slide.href;
       box.setAttribute('aria-label', slide.title);
     };
+    next.classList.remove('on');
     next.onload = reveal;
     next.alt = slide.title;
     next.src = slide.src;
-    if (next.complete) reveal();
+    if (next.complete && next.naturalWidth) reveal();
   }
 
   function preload(slide) {

@@ -6,11 +6,19 @@ import { getProjects } from '../lib/projects.js';
 const { lang = 'ko' } = Astro.props;
 const projects = await getProjects(lang);
 const listHref = `${lang === 'en' ? '/en' : ''}/projects`;
+
+// 썸네일 기울기: 폴더 이름(slug)으로 -3°~3° 사이 값을 계산 → 작품마다 늘 같은 각도
+// 새 작품도 자동으로 각도가 정해지고, 따로 적을 것은 없음
+function tilt(slug) {
+  let h = 0;
+  for (const ch of slug) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return ((h % 61) / 10 - 3).toFixed(1);
+}
 ---
 <div class="wrap">
   <ul class="grid">
     {projects.map((p) => (
-      <li class="cell"><ProjectCard p={p} lang={lang} /></li>
+      <li class="cell" style={`--tilt: ${tilt(p.slug)}deg`}><ProjectCard p={p} lang={lang} /></li>
     ))}
   </ul>
 </div>
@@ -66,6 +74,11 @@ const listHref = `${lang === 'en' ? '/en' : ''}/projects`;
     padding: var(--cell-pad);
     border-right: 1px solid var(--c-line);
     border-bottom: 1px solid var(--c-line);
+  }
+
+  /* 썸네일 기울기 (값은 위의 tilt()가 작품마다 정함) */
+  .grid :global(.thumb) {
+    transform: rotate(var(--tilt, 0deg));
   }
 
   /* 마지막 카드 오른쪽은 늘 바깥이거나 빈 칸이라 선을 지움 */

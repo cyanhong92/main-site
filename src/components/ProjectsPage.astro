@@ -15,6 +15,16 @@ function tilt(slug) {
   return ((h % 61) / 10 - 3).toFixed(1);
 }
 
+// 목록 순서대로 보면서 같은 방향이 3개 연속이 되면 그 작품의 방향만 뒤집음 (각도 크기는 그대로)
+// → 작품을 새로 넣으면 그 뒤 작품 몇 개의 방향이 바뀔 수 있음
+const tilts = [];
+for (const p of projects) {
+  let t = Number(tilt(p.slug));
+  const [a, b] = tilts.slice(-2);
+  if (a !== undefined && Math.sign(a) === Math.sign(b) && Math.sign(b) === Math.sign(t)) t = -t;
+  tilts.push(t);
+}
+
 // 기울인 썸네일이 칸 밖으로 나가 잘리지 않도록 살짝 줄이는 비율 (기울기가 클수록 조금 더 작게)
 // 16:9 사진을 각도 a만큼 돌렸을 때 가로 폭이 원래 폭 안에 들어가는 비율
 function fit(deg) {
@@ -24,8 +34,8 @@ function fit(deg) {
 ---
 <div class="wrap">
   <ul class="grid">
-    {projects.map((p) => (
-      <li class="cell" style={`--tilt: ${tilt(p.slug)}deg; --fit: ${fit(tilt(p.slug))}`}><ProjectCard p={p} lang={lang} /></li>
+    {projects.map((p, i) => (
+      <li class="cell" style={`--tilt: ${tilts[i]}deg; --fit: ${fit(tilts[i])}`}><ProjectCard p={p} lang={lang} /></li>
     ))}
   </ul>
 </div>

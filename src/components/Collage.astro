@@ -157,13 +157,14 @@ const uniqueTexts = texts.filter(({ text }) => !seen.has(text) && seen.add(text)
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   }
 
-  /* 글 조각: 그림자 없이, 메인 이름(로고)과 같은 크기 */
+  /* 글 조각: 메인 이름(로고)과 같은 크기 */
   .piece.text {
     max-width: 360px;
     padding: 4px 8px;
     background: #fff;
     font-size: 22px;
     line-height: 26px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   }
 
   @media (max-width: 720px) {

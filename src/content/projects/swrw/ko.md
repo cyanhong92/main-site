@@ -1,5 +1,6 @@
 ---
 title: "SWRW: 세계를 재배치하는 감상적인 방법들"
+quote: "세계를 재배치하는 감상적인 방법들"
 year: 2022
 category: research
 order: 9

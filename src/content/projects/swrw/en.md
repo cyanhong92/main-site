@@ -1,5 +1,6 @@
 ---
 title: "SWRW: Sentimental Ways of Remapping the World"
+quote: "Sentimental ways of remapping the world."
 ---
 
 A research project on the aesthetics of virtual space production techniques, supported by the K-Arts Art Collider Lab and released as a web publication.

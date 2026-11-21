@@ -1,5 +1,6 @@
 ---
 title: "On the Rails"
+quote: "Where are we?"
 ---
 
 An alternative game made in Unity, exhibited in 2023 in the group exhibition ≪The Willingness to Be Banished≫ by Seongbuk Cultural Foundation.

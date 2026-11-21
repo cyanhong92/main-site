@@ -1,0 +1,175 @@
+---
+// 메인 콜라주: 프로젝트에서 이미지와 글 조각을 자동으로 모아 무작위로 겹쳐 보여줌
+// 따로 관리할 목록 없음. 빌드할 때마다 지금의 본문에서 다시 뽑음
+//  - 이미지: 각 프로젝트 폴더의 모든 사진 (교육 프로젝트는 커버만, 파일 이름이 _로 시작하면 제외)
+//  - 글: 키워드 줄(· 로 구분된 줄)의 단어, 본문의 짧은 문장, 제목, quote
+import { Image } from 'astro:assets';
+import { getProjects } from '../lib/projects.js';
+
+const { lang = 'ko' } = Astro.props;
+const prefix = lang === 'en' ? '/en' : '';
+const projects = await getProjects(lang);
+
+// 프로젝트 폴더의 이미지 전부 (gif 제외: 무거움)
+const files = import.meta.glob('../content/projects/*/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
+
+const images = [];
+for (const p of projects) {
+  for (const [path, src] of Object.entries(files)) {
+    const [slug, name] = path.split('/').slice(-2);
+    if (slug !== p.slug || name.startsWith('_')) continue;
+    if (p.categoryKey === 'teaching' && !name.startsWith('cover.')) continue;
+    images.push({ p, src });
+  }
+}
+
+const MAX = lang === 'en' ? 70 : 40; // 짧은 문장 기준 (글자 수)
+const texts = [];
+for (const p of projects) {
+  const body = (p.entry.body ?? '').split(/\n## /)[0]; // 크레딧 등 소제목 아래는 제외
+  const lines = body.split('\n').map((l) => l.trim()).filter((l) => l && !/^[!<]/.test(l));
+  for (const line of lines) {
+    if (line.includes(' · ')) {
+      // 키워드 줄
+      line.split(' · ').forEach((k) => texts.push({ p, text: k.trim(), kind: 'keyword' }));
+    } else {
+      // 문장 단위로 나눠 짧은 것만
+      line.split(/(?<=[.?!]["”']?)\s+/) // 문장 끝 부호 뒤 공백에서 나눔 (af-space.net 같은 점은 그대로)
+        .map((t) => t.trim())
+        .filter((t) => t.length >= 8 && t.length <= MAX && !t.includes(':'))
+        .forEach((t) => texts.push({ p, text: t, kind: 'line' }));
+    }
+  }
+  texts.push({ p, text: p.title, kind: 'title' });
+  if (p.quote) texts.push({ p, text: p.quote, kind: 'line' });
+}
+// 같은 글이 여러 번 들어가지 않게 (Unity 같은 키워드가 자주 뜨지 않도록)
+const seen = new Set();
+const uniqueTexts = texts.filter(({ text }) => !seen.has(text) && seen.add(text));
+---
+<div class="collage" data-collage>
+  {images.map(({ p, src }) => (
+    <a href={`${prefix}/projects/${p.slug}`} class="piece img" data-kind="img" hidden>
+      <Image src={src} alt={p.title} width={720} loading="lazy" />
+    </a>
+  ))}
+  {uniqueTexts.map(({ p, text, kind }) => (
+    <a href={`${prefix}/projects/${p.slug}`} class:list={['piece', 'text', kind]} data-kind="text" hidden>
+      {text}
+    </a>
+  ))}
+</div>
+
+<script>
+  import { isMobile } from '../lib/breakpoints.js';
+
+  // 한 번에 보여줄 개수 (이미지, 글)
+  const COUNT = { desktop: [4, 3], mobile: [3, 1] };
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const shuffle = (arr) => arr.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
+
+  function layout() {
+    const box = document.querySelector('[data-collage]');
+    if (!box) return;
+    const mobile = isMobile();
+    const [nImg, nText] = mobile ? COUNT.mobile : COUNT.desktop;
+    const all = [...box.querySelectorAll('.piece')];
+    all.forEach((el) => (el.hidden = true));
+
+    const imgs = shuffle(all.filter((el) => el.dataset.kind === 'img')).slice(0, nImg);
+    const texts = shuffle(all.filter((el) => el.dataset.kind === 'text')).slice(0, nText);
+    const picked = shuffle([...imgs, ...texts]);
+
+    // 화면을 칸으로 나눠 칸마다 하나씩 놓고 칸 안에서 위치를 흔듦 (한쪽에 몰리지 않게)
+    const cols = mobile ? 2 : 3;
+    const rows = mobile ? 3 : 3;
+    const cells = shuffle(Array.from({ length: cols * rows }, (_, i) => ({ c: i % cols, r: Math.floor(i / cols) })));
+    const ratio = box.clientWidth / box.clientHeight;
+
+    picked.forEach((el, i) => {
+      const cell = cells[i % cells.length];
+      const img = el.querySelector('img');
+      // 이미지 원본 비율 (세로 이미지는 폭을 줄여 너무 길어지지 않게)
+      const aspect = img ? img.getAttribute('height') / img.getAttribute('width') : 0;
+      let w = img ? (mobile ? rand(48, 62) : rand(20, 28)) : null; // 상자 폭 대비 %
+      if (img && aspect > 1) w = w / aspect;
+      const h = img ? w * ratio * aspect : 10; // 대략 높이 %
+      const cw = w ?? (mobile ? 60 : 20);
+      const left = Math.min(cell.c * (100 / cols) + rand(-4, 100 / cols - cw * 0.5), 100 - cw);
+      const top = Math.min(cell.r * (100 / rows) + rand(-4, 100 / rows - 6), 100 - h - 2);
+      el.style.left = Math.max(0, left) + '%';
+      el.style.top = Math.max(0, top) + '%';
+      el.style.width = w ? w + '%' : '';
+      el.style.setProperty('--r', rand(-7, 7).toFixed(1) + 'deg');
+      el.style.zIndex = String(i + 1);
+      el.hidden = false;
+    });
+
+    // 이미지가 실제로 뜬 뒤 상자 밖으로 나간 조각은 안쪽으로 당김
+    picked.forEach((el) => {
+      const fit = () => {
+        const b = box.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        if (r.bottom > b.bottom) el.style.top = Math.max(0, el.offsetTop - (r.bottom - b.bottom) - 8) + 'px';
+        if (r.right > b.right) el.style.left = Math.max(0, el.offsetLeft - (r.right - b.right) - 8) + 'px';
+      };
+      const img = el.querySelector('img');
+      img && !img.complete ? img.addEventListener('load', fit, { once: true }) : fit();
+    });
+  }
+
+  layout();
+  let wasMobile = isMobile();
+  window.addEventListener('resize', () => {
+    if (isMobile() !== wasMobile) { wasMobile = isMobile(); layout(); }
+  });
+</script>
+
+<style>
+  .collage {
+    position: relative;
+    height: calc(100vh - var(--content-pt) - var(--content-pb));
+    min-height: 480px;
+  }
+
+  .piece {
+    position: absolute;
+    display: block;
+    transform: rotate(var(--r, 0deg));
+    transition: transform 0.2s;
+  }
+
+  .piece[hidden] {
+    display: none;
+  }
+
+  /* 마우스를 올리면 맨 위로 */
+  .piece:hover {
+    z-index: 100 !important;
+    color: inherit;
+  }
+
+  .piece.img :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 글 조각: 그림자 없이, 메인 이름(로고)과 같은 크기 */
+  .piece.text {
+    max-width: 360px;
+    padding: 4px 8px;
+    background: #fff;
+    font-size: 22px;
+    line-height: 26px;
+  }
+
+  @media (max-width: 720px) {
+    .collage {
+      height: calc(100svh - 140px);
+      min-height: 420px;
+    }
+  }
+</style>

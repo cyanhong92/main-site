@@ -1,5 +1,6 @@
 ---
 title: "Hyundai Motor Next Generation Vehicle NFT R&D"
+quote: "Exploring the world through the eyes of a mobility."
 ---
 
 *The Shape of a Journey: Drawing the Future* is a work Hong created as a researcher in Hyundai Design Center's Next Generation Vehicle NFT R&D. It reinterprets Hyundai Motor's single-person mobility PnD and its autonomous driving technology as media art.

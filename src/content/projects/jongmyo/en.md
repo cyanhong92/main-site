@@ -1,5 +1,6 @@
 ---
 title: "Jaeraeak Ⅰ: Jongmyo"
+quote: "Points become figures when they gather and abstraction when they scatter."
 ---
 
 Hong served as video director for a reinterpretation of Jongmyo Jeryeak by piri player Chorong Oh. The 60-minute performance took place at Kim Hee-soo Art Center in 2023.

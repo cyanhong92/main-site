@@ -15,6 +15,7 @@ const projects = defineCollection({
       category: z.enum(['work', 'collaboration', 'research', 'teaching']).optional(),
       cover: image().optional(), // 카드(16:9로 잘림)·상세 대표 이미지
       coverMotion: image().optional(), // 상세 페이지에서만 커버 대신 보여줄 움직이는 이미지 (gif)
+      quote: z.string().optional(), // 메인 콜라주에 뜨는 한 줄 (ko.md·en.md 각각)
       order: z.number().optional(), // 같은 해 안에서 순서 (작을수록 앞)
       draft: z.boolean().optional(), // true면 사이트에 안 보임
     }),

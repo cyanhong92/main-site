@@ -29,9 +29,11 @@ export async function getProjects(lang = 'ko') {
         title: entry.data.title,
         year: meta.year ?? '',
         category: meta.category ? CATEGORY_LABELS[lang][meta.category] : '',
+        categoryKey: meta.category ?? '', // work · collaboration · research · teaching
         // 카드·상세에 보이는 줄: '2025 · 작업'
         meta: [meta.year, meta.category && CATEGORY_LABELS[lang][meta.category]].filter(Boolean).join(' · '),
         cover: meta.cover,
+        quote: entry.data.quote, // 메인 콜라주용 한 줄
         coverMotion: meta.coverMotion, // 있으면 상세 페이지 첫 이미지로 씀
         order: meta.order ?? 999,
         entry,

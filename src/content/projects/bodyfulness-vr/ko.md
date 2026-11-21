@@ -1,5 +1,6 @@
 ---
 title: Bodyfulness VR
+quote: "해파리의 몸이 되어 천천히 떠다닌다"
 year: 2026
 category: research
 order: 2

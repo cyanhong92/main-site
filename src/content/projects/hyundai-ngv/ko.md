@@ -1,5 +1,6 @@
 ---
 title: 현대자동차 Next Generation Vehicle NFT R&D
+quote: "모빌리티의 시선으로 세상을 탐험한다"
 year: 2023
 category: research
 order: 8

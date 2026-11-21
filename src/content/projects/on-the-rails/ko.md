@@ -1,5 +1,6 @@
 ---
 title: 철로 위에서
+quote: "우리가 있는 곳은 어디인가요?"
 year: 2023
 category: work
 order: 4

@@ -1,5 +1,6 @@
 ---
 title: Hale
+quote: "가상의 존재와 함께 숨 쉬기"
 year: 2023
 category: work
 order: 5

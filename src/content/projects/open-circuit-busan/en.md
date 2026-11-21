@@ -1,5 +1,6 @@
 ---
 title: "Open Circuit Busan: Workshop on Making Playable Visuals with Game Engines"
+quote: "Spaces for poems, built with words."
 ---
 
 A workshop in Open Circuit Busan, a program for local artists by Busan Cultural Foundation and KAIST. Hong worked with artists in fine art, music and literature on the theme of spatializing poetry.

@@ -1,5 +1,6 @@
 ---
 title: 태양의 파빌리온
+quote: "스테인드글라스처럼 펼쳐진 일상들"
 year: 2024
 category: work
 order: 3

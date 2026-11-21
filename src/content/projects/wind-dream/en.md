@@ -1,5 +1,6 @@
 ---
 title: "Wind, Dream"
+quote: "The actors walk through an on-screen Jeju."
 ---
 
 An AI film made by K-Arts Art & Technology Lab (AT Lab) and invited to the Jeju AI International Film Festival. Hong served as AI art director.

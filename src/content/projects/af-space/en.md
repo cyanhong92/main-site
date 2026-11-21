@@ -1,5 +1,6 @@
 ---
 title: "af-space.net"
+quote: "The overlooked forms of internet space."
 ---
 
 Web page · FHD · Color · Stereo · Single projection screen

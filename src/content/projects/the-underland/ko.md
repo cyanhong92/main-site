@@ -1,5 +1,6 @@
 ---
 title: 언더랜드
+quote: "감정과 키워드가 하이퍼링크처럼 이어진다"
 year: 2024
 category: work
 order: 2

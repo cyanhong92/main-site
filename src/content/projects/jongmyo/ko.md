@@ -1,5 +1,6 @@
 ---
 title: "재래(再來)악 Ⅰ: 종묘"
+quote: "점은 모이면 형상이 되고 흩어지면 추상이 된다"
 year: 2023
 category: collaboration
 order: 13

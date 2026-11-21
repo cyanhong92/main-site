@@ -1,5 +1,6 @@
 ---
 title: "오픈서킷 부산: 게임엔진으로 플레이어블 비주얼 제작 워크숍"
+quote: "말로 지어 올린 시의 공간"
 year: 2026
 category: teaching
 order: 1

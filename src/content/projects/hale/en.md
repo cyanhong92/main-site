@@ -1,5 +1,6 @@
 ---
 title: "Hale"
+quote: "Breathing with a virtual being."
 ---
 
 An app work about a being that breathes in virtual space, released as an iOS app.

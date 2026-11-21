@@ -1,5 +1,6 @@
 ---
 title: "If Facing Object (little) a"
+quote: "The space responds to what you look at, and for how long."
 ---
 
 A 16-minute VR installation in which the visitor and virtual beings look at each other. Exhibited at the 2025 Gwangyang International Media Art Festival and presented at the K-Arts AT Lab showcase.

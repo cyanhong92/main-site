@@ -1,5 +1,6 @@
 ---
 title: 대상 a와의 마주침
+quote: "무엇을 얼마나 오래 바라보는지에 따라 공간이 반응한다"
 year: 2025
 category: work
 order: 2

@@ -1,5 +1,6 @@
 ---
 title: "Bodyfulness VR"
+quote: "Become a jellyfish and drift slowly."
 ---
 
 A dance meditation VR made with Seoul National University HCI+D Lab. Hong led VR direction and production and presented the work at CHI 2026 as a co-author.

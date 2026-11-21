@@ -1,5 +1,6 @@
 ---
 title: af-space.net
+quote: "무심코 지나치던 인터넷 공간의 조형"
 year: 2016
 category: work
 order: 1

@@ -1,5 +1,6 @@
 ---
 title: 바람,꿈
+quote: "배우가 화면 속 제주를 걷는다"
 year: 2025
 category: collaboration
 order: 1

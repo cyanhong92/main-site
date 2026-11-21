@@ -1,5 +1,6 @@
 ---
 title: "Pavilion of Sun"
+quote: "Everyday lives laid out like stained glass."
 ---
 
 A video installation selected for the LG Arts Center Media Art Open Call for Emerging Artists and exhibited at LG Arts Center. Produced under the name Softmatters.

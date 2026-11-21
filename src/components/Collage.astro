@@ -4,6 +4,7 @@
 //  - 이미지: 각 프로젝트 폴더의 모든 사진 (파일 이름이 _로 시작하면 제외)
 //  - 글: 키워드 줄(· 로 구분된 줄)의 단어, 본문의 짧은 문장, 제목, quote
 import { Image } from 'astro:assets';
+import ProjectModal from './ProjectModal.astro';
 import { getProjects } from '../lib/projects.js';
 
 const { lang = 'ko' } = Astro.props;
@@ -59,8 +60,12 @@ const uniqueTexts = texts.filter(({ text }) => !seen.has(text) && seen.add(text)
   ))}
 </div>
 
+<!-- 모바일: 조각을 누르면 메인 위에 작품 팝업 -->
+<ProjectModal closeHref={prefix || '/'} />
+
 <script>
   import { isMobile } from '../lib/breakpoints.js';
+  import { setupProjectModal } from '../lib/project-modal.js';
 
   // 한 번에 보여줄 개수 (이미지, 글)
   const COUNT = { desktop: [4, 3], mobile: [3, 1] };
@@ -119,6 +124,7 @@ const uniqueTexts = texts.filter(({ text }) => !seen.has(text) && seen.add(text)
   }
 
   layout();
+  setupProjectModal(document.querySelectorAll('[data-collage] .piece'));
   let wasMobile = isMobile();
   window.addEventListener('resize', () => {
     if (isMobile() !== wasMobile) { wasMobile = isMobile(); layout(); }

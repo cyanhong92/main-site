@@ -1,0 +1,12 @@
+---
+// 모바일 작품 팝업의 틀. 동작은 src/lib/project-modal.js
+// closeHref: 팝업을 닫을 때 기본으로 돌아갈 주소 (보통은 뒤로가기로 처리됨)
+import '../styles/project-article.css';
+import '../styles/project-modal.css';
+const { closeHref = '/' } = Astro.props;
+---
+<div class="pm-overlay" hidden>
+  <div class="pm-backdrop"></div>
+  <a href={closeHref} class="pm-close" aria-label="Close"><svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 2 L12 12 M12 2 L2 12" /></svg></a>
+  <article class="pm-panel project-article"></article>
+</div>

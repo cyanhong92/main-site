@@ -1,9 +1,8 @@
 ---
 // Projects 목록 화면. lang="ko" 또는 "en"
 import ProjectCard from './ProjectCard.astro';
+import ProjectModal from './ProjectModal.astro';
 import { getProjects } from '../lib/projects.js';
-import '../styles/project-article.css';
-import '../styles/project-modal.css';
 const { lang = 'ko' } = Astro.props;
 const projects = await getProjects(lang);
 const listHref = `${lang === 'en' ? '/en' : ''}/projects`;
@@ -17,69 +16,19 @@ const listHref = `${lang === 'en' ? '/en' : ''}/projects`;
 </div>
 
 <!-- 모바일 팝업: 카드를 누르면 페이지를 옮기지 않고 이 위에 상세 내용을 불러와 띄움 -->
-<div class="pm-overlay" hidden>
-  <div class="pm-backdrop"></div>
-  <a href={listHref} class="pm-close" aria-label="Close"><svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 2 L12 12 M12 2 L2 12" /></svg></a>
-  <article class="pm-panel project-article"></article>
-</div>
+<ProjectModal closeHref={listHref} />
 
 <script>
-  import { isMobile } from '../lib/breakpoints.js';
+  import { setupProjectModal } from '../lib/project-modal.js';
 
-  // ---------- 모바일: 같은 페이지 위 팝업 ----------
-  const overlay = document.querySelector('.pm-overlay');
-  const box = overlay.querySelector('.pm-panel');
-  const listTitle = document.title;
-
-  async function openModal(href, push) {
-    const res = await fetch(href);
-    const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-    const article = doc.querySelector('.project-article');
-    if (!article) return (location.href = href); // 실패하면 그냥 상세 페이지로 이동
-    box.innerHTML = article.innerHTML;
-    overlay.hidden = false;
-    overlay.scrollTop = 0;
-    document.documentElement.style.overflow = 'hidden'; // 뒤 목록은 그 자리에 멈춤
-    document.title = doc.title;
-    if (push) history.pushState({ modal: href }, '', href); // 주소창도 작품 주소로
-  }
-
-  function closeModal() {
-    overlay.hidden = true;
-    box.innerHTML = '';
-    document.documentElement.style.overflow = '';
-    document.title = listTitle;
-  }
-
-  // ×·배경·Esc → 브라우저 뒤로가기와 같게 처리 (주소도 목록으로 돌아감)
-  overlay.querySelector('.pm-close').addEventListener('click', (e) => {
-    e.preventDefault();
-    history.back();
-  });
-  overlay.querySelector('.pm-backdrop').addEventListener('click', () => history.back());
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !overlay.hidden) history.back();
-  });
-  window.addEventListener('popstate', (e) => {
-    if (e.state && e.state.modal) openModal(e.state.modal, false);
-    else if (!overlay.hidden) closeModal();
-  });
-
-  // ---------- 카드 클릭 ----------
-  document.querySelectorAll('.grid .card').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      const href = card.getAttribute('href');
-      if (isMobile()) {
-        e.preventDefault();
-        openModal(href, true);
-        return;
-      }
-      // 웹: 상세 페이지로 이동. 돌아올 때 보던 위치로 복원하도록 기억
+  // 카드 클릭: 모바일은 팝업, 웹은 상세 페이지로 이동 (돌아올 때 보던 위치로 복원하도록 기억)
+  setupProjectModal(document.querySelectorAll('.grid .card'), {
+    onDesktopClick: () => {
       sessionStorage.setItem('projectsList', JSON.stringify({
         path: location.pathname,
         y: window.scrollY,
       }));
-    });
+    },
   });
 
   // 웹: 상세에서 '<'로 돌아온 경우 원래 위치로
